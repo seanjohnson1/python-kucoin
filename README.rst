@@ -33,7 +33,8 @@ Register an account with `Kucoin <https://www.kucoin.com>`_.
 
 To test on the Sandbox register with `Kucoin Sandbox <https://sandbox.kucoin.com/ucenter/signup>`_.
 
-`Generate an API Key <https://www.kucoin.com/account/api>`_ and enable it.
+`Generate an API Key <https://www.kucoin.com/account/api>`_ 
+or `Generate an API Key in Sandbox <https://sandbox.kucoin.com/account/api>`_ and enable it.
 
 .. code:: bash
 
