@@ -61,18 +61,6 @@ To test on the Sandbox register with `Kucoin Sandbox <https://sandbox.kucoin.com
     # get currencies
     currencies = client.get_currencies()
 
-    # get market depth
-    depth = client.get_order_book('KCS-BTC')
-
-    # get symbol klines
-    klines = client.get_kline_dat('KCS-BTC')
-
-    # place a market buy order
-    order = client.create_market_order('NEO', Client.SIDE_BUY, size=20)
-
-    # get list of active orders
-    orders = client.get_active_orders('KCS-BTC')
-
-
-For more `check out the documentation <https://python-kucoin.readthedocs.io/en/latest/>`_.
+    # get accounts
+    accounts = client.get_accounts()
 
