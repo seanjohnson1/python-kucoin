@@ -2,16 +2,16 @@
 from setuptools import setup
 
 setup(
-    name='python-kucoin',
+    name='kucoin-python',
     version='2.0.0',
     packages=['kucoin'],
     description='Kucoin REST API v2 python implementation',
-    url='https://github.com/sammchardy/python-kucoin',
-    author='Sam McHardy',
+    url='https://github.com/Kucoin/python-kucoin',
+    author='Kucoin',
     license='MIT',
-    author_email='',
+    author_email='ly.luo@kucoin.com',
     install_requires=['requests'],
-    keywords='kucoin exchange rest api bitcoin ethereum btc eth kcs',
+    keywords='kucoin exchange rest api bitcoin btc eth kcs',
     classifiers=[
           'Intended Audience :: Developers',
           'License :: OSI Approved :: MIT License',

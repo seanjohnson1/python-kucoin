@@ -44,7 +44,7 @@ class Client(object):
     TIMEINFORCE_IMMEDIATE_OR_CANCEL = 'IOC'
     TIMEINFORCE_FILL_OR_KILL = 'FOK'
 
-    def __init__(self, api_key, api_secret, passphrase, sandbox=False, requests_params=None):
+    def __init__(self, api_key, api_secret, api_passphrase, sandbox=False, requests_params=None):
         """Kucoin API Client constructor
 
         https://docs.kucoin.com/
@@ -53,8 +53,8 @@ class Client(object):
         :type api_key: string
         :param api_secret: Api Secret
         :type api_secret: string
-        :param passphrase: Api Passphrase used to create API
-        :type passphrase: string
+        :param api_passphrase: Api Passphrase used to create API
+        :type api_passphrase: string
         :param sandbox: (optional) Use the sandbox endpoint or not (default False)
         :type sandbox: bool
         :param requests_params: (optional) Dictionary of requests params to use for all calls
@@ -68,7 +68,7 @@ class Client(object):
 
         self.API_KEY = api_key
         self.API_SECRET = api_secret
-        self.API_PASSPHRASE = passphrase
+        self.API_PASSPHRASE = api_passphrase
         if sandbox:
             self.API_URL = self.SANDBOX_API_URL
         else:
