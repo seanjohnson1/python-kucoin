@@ -6,25 +6,19 @@ This API has been updated to work with the v2 Sandbox
 Installation
 ------------
 
-``python-kucoin`` is available on `PYPI <https://pypi.python.org/pypi/python-kucoin/>`_.
+``kucoin-python`` is available on `PYPI <https://pypi.python.org/pypi/kucoin-python/>`_.
 Install with ``pip``:
 
 .. code:: bash
 
-    pip install python-kucoin
-
-For previous v1 API install with
-
-.. code:: bash
-
-    pip install python-kucoin==0.1.12
+    pip install kucoin-python
 
 Register on Kucoin
 -------------------
 
-Firstly register an account with `Kucoin <https://www.kucoin.com/#/?r=E42cWB>`_.
+Firstly register an account with `Kucoin <https://www.kucoin.com>`_.
 
-To test on the Sandbox register with `Kucoin Sandbox <https://sandbox.kucoin.com/ucenter/signup?rcode=ewcefH>`_.
+To test on the Sandbox register with `Kucoin Sandbox <https://sandbox.kucoin.com/ucenter/signup>`_.
 
 Generate an API Key
 -------------------
@@ -67,7 +61,7 @@ You can use the Requests Settings method above
     }
 
     # in the Client instantiation
-    client = Client("api-key", "api-secret", {'proxies': proxies})
+    client = Client("api-key", "api-secret", "api-passphrase", {'proxies': proxies})
 
 Or set an environment variable for your proxy if required to work across all requests.
 

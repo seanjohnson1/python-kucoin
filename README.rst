@@ -1,24 +1,15 @@
 ================================
-Welcome to python-kucoin v2.0.0
+Welcome to kucoin-python v2.0.0
 ================================
 
-.. image:: https://img.shields.io/pypi/v/python-kucoin.svg
+.. image:: https://img.shields.io/pypi/v/kucoin-python.svg
     :target: https://pypi.python.org/pypi/python-kucoin
 
-.. image:: https://img.shields.io/pypi/l/python-kucoin.svg
+.. image:: https://img.shields.io/pypi/l/kucoin-python.svg
     :target: https://pypi.python.org/pypi/python-kucoin
 
-.. image:: https://img.shields.io/travis/sammchardy/python-kucoin.svg
-    :target: https://travis-ci.org/sammchardy/python-kucoin
-
-.. image:: https://img.shields.io/coveralls/sammchardy/python-kucoin.svg
-    :target: https://coveralls.io/github/sammchardy/python-kucoin
-
-.. image:: https://img.shields.io/pypi/wheel/python-kucoin.svg
-    :target: https://pypi.python.org/pypi/python-kucoin
-
-.. image:: https://img.shields.io/pypi/pyversions/python-kucoin.svg
-    :target: https://pypi.python.org/pypi/python-kucoin
+.. image:: https://img.shields.io/pypi/pyversions/kucoin-python.svg
+    :target: https://pypi.python.org/pypi/kucoin-python
 
 This is an official Python wrapper for the `Kucoin exchanges REST API v2 <https://docs.kucoin.com/>`_.
 
@@ -42,7 +33,7 @@ Register an account with `Kucoin <https://www.kucoin.com>`_.
 
 To test on the Sandbox register with `Kucoin Sandbox <https://sandbox.kucoin.com/ucenter/signup>`_.
 
-`Generate an API Key <https://kucoin.com/account/api>`_ and enable it.
+`Generate an API Key <https://www.kucoin.com/account/api>`_ and enable it.
 
 .. code:: bash
 
