@@ -12,6 +12,7 @@ Welcome to kucoin-python v2.0.0
     :target: https://pypi.python.org/pypi/kucoin-python
 
 This is an official Python wrapper for the `Kucoin exchanges REST API v2 <https://docs.kucoin.com/>`_.
+The sdk is under development, the test did not complete.
 
 
 Features
