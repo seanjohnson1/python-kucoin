@@ -81,7 +81,7 @@ class Client(object):
 
         session = requests.session()
         headers = {'Accept': 'application/json',
-                   'User-Agent': 'python-kucoin',
+                   'User-Agent': 'kucoin-python-v2',
                    'KC-API-KEY': self.API_KEY,
                    'KC-API-PASSPHRASE': self.API_PASSPHRASE}
         session.headers.update(headers)
@@ -99,6 +99,15 @@ class Client(object):
         for key in sorted(data):
             strs.append("{}={}".format(key, data[key]))
         return '&'.join(strs)
+
+    @staticmethod
+    def _simple_uuid():
+        """create a simple uuid
+
+        :return: simple uuid with out '-'
+
+        """
+        return str(uuid.uuid4()).replace('-', '')
 
     def _generate_signature(self, nonce, method, path, data):
         """Generate the call signature
@@ -153,6 +162,10 @@ class Client(object):
         if kwargs['data'] and method == 'get':
             kwargs['params'] = kwargs['data']
             del(kwargs['data'])
+
+        if method == 'post':
+            kwargs['data'] = json.dumps(kwargs['data'], separators=(',', ':'), ensure_ascii=False)
+            kwargs['headers']['Content-Type'] = 'application/json'
 
         response = getattr(self.session, method)(uri, **kwargs)
         return self._handle_response(response)
@@ -374,7 +387,7 @@ class Client(object):
 
         return self._post('accounts', True, data=data)
 
-    def get_account_history(self, account_id, start=None, end=None, page=None, limit=None):
+    def get_account_history(self, account_id, start=None, end=None, page=1, limit=50):
         """Get an individual account
 
         https://docs.kucoin.com/#get-account-history
@@ -452,7 +465,7 @@ class Client(object):
         if limit:
             data['pageSize'] = limit
 
-        return self._get('accounts/{}/ledgers'.format(account_id), True)
+        return self._get('accounts/{}/ledgers'.format(account_id), True, data=data)
 
     def get_account_holds(self, account_id, page=None, page_size=None):
         """Get account holds placed for any active orders or pending withdraw requests
@@ -511,7 +524,7 @@ class Client(object):
         if page_size:
             data['pageSize'] = page_size
 
-        return self._get('accounts/{}/ledgers'.format(account_id), True)
+        return self._get('accounts/{}/holds'.format(account_id), True, data=data)
 
     def create_inner_transfer(self, from_account_id, to_account_id, amount, order_id=None):
         """Get account holds placed for any active orders or pending withdraw requests
@@ -552,9 +565,9 @@ class Client(object):
         if order_id:
             data['clientOid'] = order_id
         else:
-            data['clientOid'] = str(uuid.uuid4())
+            data['clientOid'] = self._simple_uuid()
 
-        return self._post('accounts/inner-transfer', True)
+        return self._post('accounts/inner-transfer', True, data=data)
 
     # Deposit Endpoints
 
@@ -892,7 +905,7 @@ class Client(object):
         :type size: string
         :param funds: (optional) Desired amount of quote currency to use
         :type funds: string
-        :param order_id: (optional) Unique order_id (default str(uuid.uuid4()))
+        :param order_id: (optional) Unique order_id (default str(uuid.uuid4()) without '-')
         :type order_id: string
         :param remark: (optional) remark for the order, max 100 utf8 characters
         :type remark: string
@@ -934,7 +947,7 @@ class Client(object):
         if order_id:
             data['orderOid'] = order_id
         else:
-            data['orderOid'] = str(uuid.uuid4())
+            data['orderOid'] = self._simple_uuid()
         if remark:
             data['remark'] = remark
         if stp:
@@ -956,7 +969,7 @@ class Client(object):
         :type price: string
         :param amount: Amount
         :type amount: string
-        :param order_id: (optional) Unique order_id  default str(uuid.uuid4())
+        :param order_id: (optional) Unique order_id  default str(uuid.uuid4() without '-')
         :type order_id: string
         :param remark: (optional) remark for the order, max 100 utf8 characters
         :type remark: string
@@ -1011,7 +1024,7 @@ class Client(object):
         if order_id:
             data['orderOid'] = order_id
         else:
-            data['orderOid'] = str(uuid.uuid4())
+            data['orderOid'] = self._simple_uuid()
         if remark:
             data['remark'] = remark
         if stp:
@@ -1319,14 +1332,14 @@ class Client(object):
 
     # Market Endpoints
 
-    def get_ticks(self):
-        """Get all ticks
+    def get_symbols(self):
+        """Get all symbols
 
         https://docs.kucoin.com/#symbols-amp-ticker
 
         .. code:: python
 
-            ticks = client.get_tick()
+            ticks = client.get_symbols()
 
         :returns: ApiResponse
 
