@@ -1,6 +1,7 @@
 # coding=utf-8
 
 import base64
+from datetime import datetime
 import hashlib
 import hmac
 import json
@@ -15,7 +16,6 @@ from .exceptions import (
 
 
 class Client(object):
-
     REST_API_URL = 'https://openapi-v2.kucoin.com'
     SANDBOX_API_URL = 'https://openapi-sandbox.kucoin.com'
     API_VERSION = 'v1'
@@ -161,7 +161,7 @@ class Client(object):
 
         if kwargs['data'] and method == 'get':
             kwargs['params'] = kwargs['data']
-            del(kwargs['data'])
+            del (kwargs['data'])
 
         if method == 'post':
             kwargs['data'] = json.dumps(kwargs['data'], separators=(',', ':'), ensure_ascii=False)
@@ -1581,8 +1581,8 @@ class Client(object):
 
         return self._get('market/orderbook/level3', False, data=data)
 
-    def get_recent_orders(self, symbol):
-        """Get recent orders
+    def get_trade_histories(self, symbol):
+        """Get trade histories
 
         https://docs.kucoin.com/#get-trade-histories
 
@@ -1625,11 +1625,18 @@ class Client(object):
 
         return self._get('market/histories', False, data=data)
 
-    def get_kline_data(self, symbol):
+    def get_kline_data(self, symbol, kline_type='1min', start_at=None, end_at=None):
         """Get kline data
 
         :param symbol: Name of symbol e.g. KCS-BTC
-        :type symbol: string
+        :type  symbol: string
+        :param kline_type: type of symbol, type of candlestick patterns: 1min, 3min, 5min, 15min, 30min, 1hour, 2hour, 4hour,
+                     6hour, 8hour, 12hour, 1day, 1week
+        :type kline_type: string
+        :param start_at: Start time, unix timestamp calculated in seconds
+        :type start_at: long
+        :param end_at: End time, unix timestamp calculated in seconds
+        :type end_at: long
 
         https://docs.kucoin.com/#get-historic-rates
 
@@ -1666,8 +1673,23 @@ class Client(object):
 
         """
 
+        if not start_at:
+            start_at = int(time.mktime(datetime.now().date().timetuple()))
+
+        if not end_at:
+            end_at = int(time.time() * 1000)
+
         data = {
-            'symbol': symbol
+            'symbol': symbol,
+            'startAt': start_at,
+            'endAt': end_at,
+            'type': kline_type
         }
 
         return self._get('market/candles', False, data=data)
+
+    def get_market_list(self):
+        """Get supported market list
+        """
+        return self._get('markets', False)
+

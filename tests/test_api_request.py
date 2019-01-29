@@ -25,23 +25,42 @@ def test_currencies():
 
 
 def test_get_ticker():
-    client.get_ticker('ETH-BTC')
+    assert len(client.get_ticker('ETH-BTC')) > 0
 
 
 def test_accounts():
-    all = client.get_accounts()
-    id = all[0]['id']
-    single = client.get_account(id)
-    assert single['balance'] == all[0]['balance']
-    assert client.get_account_holds(id)['totalNum'] == 0
+    all_account = client.get_accounts()
+    account_id = all_account[0]['id']
+    single = client.get_account(account_id)
+    assert single['balance'] == all_account[0]['balance']
+    assert client.get_account_holds(account_id)['totalNum'] == 0
     # sandbox will deposit for you after registering
-    assert client.get_account_history(id)['totalNum'] >= 1
+    assert client.get_account_history(account_id)['totalNum'] >= 1
+
+
+def test_get_24hr_stats():
+    client.get_24hr_stats('ETH-BTC')
 
 
 def test_create_account():
     with pytest.raises(KucoinAPIException):
         response = client.create_account('trade', 'BTC')
         assert response['code'] == "230005"
+
+
+def test_get_trade_histories():
+    client.get_trade_histories('ETH-BTC')
+
+
+def test_timestamp():
+    t1 = client.get_timestamp()
+    t2 = client.get_timestamp()
+    assert t2 - t1 >= 0
+
+
+def test_orderbook():
+    client.get_full_order_book('ETH-BTC')
+    client.get_full_order_book_level3('ETH-BTC')
 
 
 def test_inner_transfer():
@@ -57,9 +76,14 @@ def test_inner_transfer():
     assert client.get_account(kcs_main['id'])['balance'] == kcs_main['balance']
     assert client.get_account(kcs_trade['id'])['balance'] == kcs_trade['balance']
 
+
 def test_get_deposit_address():
     with pytest.raises(KucoinAPIException):
         client.get_deposit_address('BTC')
+
+
+def test_market_list():
+    client.get_market_list()
 
 
 def test_create_deposit_address():
