@@ -1039,7 +1039,6 @@ class Client(object):
             data['stop'] = stop
             data['stop_price'] = stop_price
 
-        print data
         return self._post('orders', True, data=data)
 
     def cancel_order(self, order_id):
@@ -1442,7 +1441,7 @@ class Client(object):
 
         """
 
-        return self._get('market/stats/{}'.format(symbol), False)
+        return self._get('market/stats?symbol={}'.format(symbol), False)
 
     def get_order_book(self, symbol):
         """Get a list of bids and asks aggregated by price for a symbol.
