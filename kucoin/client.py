@@ -890,7 +890,7 @@ class Client(object):
 
     # Order Endpoints
 
-    def create_market_order(self, symbol, side, size=None, funds=None, order_id=None, remark=None, stp=None):
+    def create_market_order(self, symbol, side, size=None, funds=None, client_oid=None, remark=None, stp=None):
         """Create a market order
 
         One of size or funds must be set
@@ -905,8 +905,8 @@ class Client(object):
         :type size: string
         :param funds: (optional) Desired amount of quote currency to use
         :type funds: string
-        :param order_id: (optional) Unique order_id (default str(uuid.uuid4()) without '-')
-        :type order_id: string
+        :param client_oid: (optional) Unique order_id (default str(uuid.uuid4()) without '-')
+        :type client_oid: string
         :param remark: (optional) remark for the order, max 100 utf8 characters
         :type remark: string
         :param stp: (optional) self trade protection CN, CO, CB or DC（default is None)
@@ -945,9 +945,9 @@ class Client(object):
         if funds:
             data['funds'] = funds
         if order_id:
-            data['orderOid'] = order_id
+            data['clientOid'] = client_oid
         else:
-            data['orderOid'] = self._simple_uuid()
+            data['clientOid'] = self._simple_uuid()
         if remark:
             data['remark'] = remark
         if stp:
@@ -955,7 +955,7 @@ class Client(object):
 
         return self._post('orders', True, data=data)
 
-    def create_limit_order(self, symbol, side, price, amount, order_id=None, remark=None,
+    def create_limit_order(self, symbol, side, price, size, client_oid=None, remark=None,
                            time_in_force=None, stop=None, stop_price=None, stp=None, cancel_after=None, post_only=None):
         """Create an order
 
@@ -967,10 +967,10 @@ class Client(object):
         :type side: string
         :param price: Name of coin
         :type price: string
-        :param amount: Amount
-        :type amount: string
-        :param order_id: (optional) Unique order_id  default str(uuid.uuid4() without '-')
-        :type order_id: string
+        :param size: Amount
+        :type size: string
+        :param client_oid: (optional) Unique order_id  default str(uuid.uuid4() without '-')
+        :type client_oid: string
         :param remark: (optional) remark for the order, max 100 utf8 characters
         :type remark: string
         :param stp: (optional) self trade protection CN, CO, CB or DC（default is None)
@@ -1018,13 +1018,13 @@ class Client(object):
             'side': side,
             'type': self.ORDER_LIMIT,
             'price': price,
-            'amount': amount
+            'size': size
         }
 
-        if order_id:
-            data['orderOid'] = order_id
+        if client_oid:
+            data['clientOid'] = client_oid
         else:
-            data['orderOid'] = self._simple_uuid()
+            data['clientOid'] = self._simple_uuid()
         if remark:
             data['remark'] = remark
         if stp:
@@ -1039,7 +1039,8 @@ class Client(object):
             data['stop'] = stop
             data['stop_price'] = stop_price
 
-        return self._post('order', True, data=data)
+        print data
+        return self._post('orders', True, data=data)
 
     def cancel_order(self, order_id):
         """Cancel an order
@@ -1692,4 +1693,3 @@ class Client(object):
         """Get supported market list
         """
         return self._get('markets', False)
-
