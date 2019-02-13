@@ -28,6 +28,12 @@ def test_get_ticker():
     assert len(client.get_ticker('ETH-BTC')) > 0
 
 
+def test_get_order():
+    client.get_order('5c63c4aeef83c72f99c71e1a')
+
+def test_get_orders():
+    client.get_orders()
+
 def test_accounts():
     all_account = client.get_accounts()
     account_id = all_account[0]['id']
