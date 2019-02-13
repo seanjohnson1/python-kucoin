@@ -31,8 +31,16 @@ def test_get_ticker():
 def test_get_order():
     client.get_order('5c63c4aeef83c72f99c71e1a')
 
+
 def test_get_orders():
     client.get_orders()
+    # 94665600000 1970/1/1
+    assert client.get_orders(start=946656000000, end=946656000000)['totalNum'] == 0
+    assert client.get_orders(page=1, limit=50, symbol='KCS-BTC', status='done', order_type='limit', side='buy',
+                             start=1550042780000, end=1550042782000)['totalNum'] == 1
+
+def test_withdral_quota():
+    assert float(client.get_withdrawal_quotas('KCS')['usedBTCAmount']) == 0
 
 def test_accounts():
     all_account = client.get_accounts()
@@ -42,6 +50,8 @@ def test_accounts():
     client.get_account_holds(account_id)['totalNum']
     # sandbox will deposit for you after registering
     assert client.get_account_history('5c51163aef83c72f924574e3')['totalNum'] >= 1
+    assert client.get_account_history('5c51163aef83c72f924574e3', 1550043119000, 1550043119000, page=1, limit=10)[
+               'totalNum'] > 0
 
 
 def test_get_24hr_stats():

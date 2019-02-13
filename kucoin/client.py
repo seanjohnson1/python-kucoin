@@ -96,7 +96,7 @@ class Client(object):
 
         """
         strs = []
-        for key in sorted(data):
+        for key in data:
             strs.append("{}={}".format(key, data[key]))
         return '&'.join(strs)
 
