@@ -8,10 +8,10 @@ Welcome to kucoin-python v2.0.0
 .. image:: https://img.shields.io/pypi/l/kucoin-python.svg
     :target: https://pypi.python.org/pypi/kucoin-python
 
-.. image:: https://img.shields.io/travis/Kucoin/kucoin-python.svg
+.. image:: https://img.shields.io/travis/Kucoin/python-kucoin.svg
     :target: https://travis-ci.org/Kucoin/python-kucoin
 
-.. image:: https://img.shields.io/coveralls/Kucoin/kucoin-python.svg
+.. image:: https://img.shields.io/coveralls/Kucoin/python-kucoin.svg
     :target: https://coveralls.io/github/Kucoin/python-kucoin
 
 .. image:: https://img.shields.io/pypi/pyversions/kucoin-python.svg
