@@ -944,7 +944,7 @@ class Client(object):
             data['size'] = size
         if funds:
             data['funds'] = funds
-        if order_id:
+        if client_oid:
             data['clientOid'] = client_oid
         else:
             data['clientOid'] = self._simple_uuid()
