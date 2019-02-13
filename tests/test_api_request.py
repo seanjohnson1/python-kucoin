@@ -35,7 +35,7 @@ def test_accounts():
     assert single['balance'] == all_account[0]['balance']
     client.get_account_holds(account_id)['totalNum']
     # sandbox will deposit for you after registering
-    assert client.get_account_history(account_id)['totalNum'] >= 1
+    assert client.get_account_history('5c51163aef83c72f924574e3')['totalNum'] >= 1
 
 
 def test_get_24hr_stats():
