@@ -35,26 +35,26 @@ def test_get_order():
 
 
 def test_create_limit_order():
-    client.create_limit_order('KCS-BTC', Client.SIDE_SELL, '0.01', '1000')
-    client.create_limit_order('KCS-BTC', Client.SIDE_SELL, '0.01', '1000', str(uuid.uuid4()).replace('-', ''))
+    client.create_limit_order('KCS-BTC', Client.SIDE_SELL, '0.01', '1000',
+                              client_oid=str(uuid.uuid4()).replace('-', ''), remark='create limit order')
     client.cancel_all_orders()
 
 
 def test_create_market_order():
-    client.create_market_order('KCS-BTC', Client.SIDE_SELL, 1)
-    client.create_market_order('KCS-BTC', Client.SIDE_BUY, 1)
+    client.create_market_order('KCS-BTC', Client.SIDE_BUY, '1', client_oid=str(uuid.uuid4()).replace('-', ''),
+                               remark='create market order')
 
 
 def test_get_orders():
     client.get_orders()
     # 94665600000 1970/1/1
-    assert client.get_orders(start=946656000000, end=946656000000)['totalNum'] == 0
+    assert client.get_orders(start='946656000000', end='946656000000')['totalNum'] == 0
     assert client.get_orders(page=1, page_size=50, symbol='KCS-BTC', status='done', order_type='limit', side='buy',
-                             start=1550042780000, end=1550042782000)['totalNum'] == 1
+                             start='1550042780000', end='1550042782000')['totalNum'] == 1
 
 
 def test_get_withdrawal():
-    assert client.get_withdrawals('KCS', 'SUCCESS', 946656000000, 946656000000, 1, 50)['totalNum'] == 0
+    assert client.get_withdrawals('KCS', 'SUCCESS', '946656000000', '946656000000', 1, 50)['totalNum'] == 0
 
 
 def test_withdrawal_quota():
@@ -69,12 +69,17 @@ def test_accounts():
     assert client.get_account_holds(account_id, 1, 50)['totalNum'] >= 0
     # sandbox will deposit for you after registering
     assert client.get_account_history(account_id='5c51163aef83c72f924574e3')['totalNum'] >= 1
-    assert client.get_account_history(account_id='5c51163aef83c72f924574e3', start=1550043119000, end=1550043119000,
+    assert client.get_account_history(account_id='5c51163aef83c72f924574e3', start='1550043119000', end='1550043119000',
                                       page=1, page_size=10)['totalNum'] > 0
 
 
 def test_get_24hr_stats():
     client.get_24hr_stats('KCS-BTC')
+
+
+def test_get_kline_data():
+    assert len(client.get_kline_data('KCS-BTC')) > 0
+    assert len(client.get_kline_data('KCS-BTC', '1hour', 946656000000, 946656000000)) == 0
 
 
 def test_get_orderbook():
@@ -120,7 +125,7 @@ def test_inner_transfer():
 def test_get_fills():
     assert client.get_fills('5c65138cef83c72f99d948b1')['totalNum'] == 4
     assert client.get_fills(symbol='ABC-BTC', page=1, page_size=50, side='buy', order_type='limit')['totalNum'] == 0
-    assert client.get_fills(start=946656000000, end=946656000000)['totalNum'] == 0
+    assert client.get_fills(start='946656000000', end='946656000000')['totalNum'] == 0
 
 
 def test_get_deposit_address_exception():
@@ -138,7 +143,7 @@ def test_create_deposit_address_exception():
 
 
 def test_get_deposit():
-    response = client.get_deposits('BTC', 'SUCCESS', 946656000000, 946656000000, 1, 66)
+    response = client.get_deposits('BTC', 'SUCCESS', '946656000000', '946656000000', 1, 66)
     assert response['totalNum'] == 0
     assert response['pageSize'] == 66
 
@@ -181,34 +186,34 @@ def test_withdrawal_exception_2():
         client.create_withdrawal('KCS', '1', 'dummy', 'memo', False, 'remark')
 
 
-def test_withdrawal_exception_1():
+def test_withdrawal_exception_3():
     with pytest.raises(KucoinAPIException):
-        client.create_withdrawal('KCS', '1', 'dummy', 'memo', False, 'remark')
+        client.create_withdrawal('KCS', '1', 'dummy', 'memo', True, 'remark')
 
 
-def test_withdrawal_exception_2():
+def test_withdrawal_exception_4():
     with pytest.raises(KucoinAPIException):
         client.cancel_withdrawal('dummy')
 
 
 def test_create_limit_order_exception_1():
     with pytest.raises(LimitOrderException):
-        client.create_limit_order('KCS-BTC', Client.SIDE_SELL, '0.01', '1000', stop=True)
+        client.create_limit_order('KCS-BTC', Client.SIDE_SELL, '0.01', '1000', stop='True')
 
 
 def test_create_limit_order_exception_2():
     with pytest.raises(LimitOrderException):
-        client.create_limit_order('KCS-BTC', Client.SIDE_SELL, '0.01', '1000', stop_price='0.02')
+        client.create_limit_order('KCS-BTC', Client.SIDE_SELL, '0.01', '1000', stop='False', stop_price='0.02')
 
 
-def test_create_limit_order_exception_2():
+def test_create_limit_order_exception_3():
     with pytest.raises(LimitOrderException):
         client.create_limit_order('KCS-BTC', Client.SIDE_SELL, '0.01', '1000', cancel_after='1m', time_in_force='FOK')
 
 
 def test_create_market_order_1():
     with pytest.raises(MarketOrderException):
-        client.create_market_order('KCS-BTC', Client.SIDE_SELL, size=1, funds=1)
+        client.create_market_order('KCS-BTC', Client.SIDE_SELL, size='1', funds='1')
 
 
 def test_create_market_order_2():
