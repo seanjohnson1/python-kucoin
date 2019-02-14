@@ -6,6 +6,7 @@ from kucoin.exceptions import KucoinAPIException, KucoinRequestException, Market
 import pytest
 import requests_mock
 import uuid
+import time
 
 api_key = "5c4eb3b1ef83c721c02cb97c"
 api_secret = "9589ff2f-c8ac-4ca6-8d72-83f38125c540"
@@ -35,13 +36,15 @@ def test_get_order():
 
 
 def test_create_limit_order():
-    client.create_limit_order('KCS-BTC', Client.SIDE_SELL, '0.01', '1000',
+    client.create_limit_order('KCS-BTC', Client.SIDE_SELL, '0.0001', '1000',
                               client_oid=str(uuid.uuid4()).replace('-', ''), remark='create limit order')
+    client.create_limit_order('KCS-BTC', Client.SIDE_SELL, '0.0001', '1000', post_only=True)
+    client.create_limit_order('KCS-BTC', Client.SIDE_SELL, '0.0001', '1000', cancel_after='60', time_in_force='GTT')
     client.cancel_all_orders()
 
 
-def test_create_market_order():
-    client.create_market_order('KCS-BTC', Client.SIDE_BUY, '1', client_oid=str(uuid.uuid4()).replace('-', ''),
+def test_create_market_order_1():
+    client.create_market_order('KCS-BTC', Client.SIDE_BUY, size='1', client_oid=str(uuid.uuid4()).replace('-', ''),
                                remark='create market order')
 
 
@@ -203,7 +206,7 @@ def test_create_limit_order_exception_1():
 
 def test_create_limit_order_exception_2():
     with pytest.raises(LimitOrderException):
-        client.create_limit_order('KCS-BTC', Client.SIDE_SELL, '0.01', '1000',  stop_price='0.02')
+        client.create_limit_order('KCS-BTC', Client.SIDE_SELL, '0.01', '1000', stop_price='0.02')
 
 
 def test_create_limit_order_exception_3():
@@ -219,3 +222,7 @@ def test_create_market_order_1():
 def test_create_market_order_2():
     with pytest.raises(MarketOrderException):
         client.create_market_order('KCS-BTC', Client.SIDE_SELL)
+
+
+def test_create_market_order_2():
+    client.create_market_order('KCS-BTC', Client.SIDE_BUY, funds='0.0001', stp='CN')
