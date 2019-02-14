@@ -203,7 +203,7 @@ def test_create_limit_order_exception_1():
 
 def test_create_limit_order_exception_2():
     with pytest.raises(LimitOrderException):
-        client.create_limit_order('KCS-BTC', Client.SIDE_SELL, '0.01', '1000', stop='False', stop_price='0.02')
+        client.create_limit_order('KCS-BTC', Client.SIDE_SELL, '0.01', '1000',  stop_price='0.02')
 
 
 def test_create_limit_order_exception_3():
