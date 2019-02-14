@@ -166,3 +166,28 @@ def test_withdrawal_exception():
 def test_withdrawal_exception():
     with pytest.raises(KucoinAPIException):
         client.cancel_withdrawal('dummy')
+
+
+def test_create_limit_order_exception_1():
+    with pytest.raises(LimitOrderException):
+        client.create_limit_order('KCS-BTC', Client.SIDE_SELL, '0.01', '1000', stop=True)
+
+
+def test_create_limit_order_exception_2():
+    with pytest.raises(LimitOrderException):
+        client.create_limit_order('KCS-BTC', Client.SIDE_SELL, '0.01', '1000', stop_price='0.02')
+
+
+def test_create_limit_order_exception_2():
+    with pytest.raises(LimitOrderException):
+        client.create_limit_order('KCS-BTC', Client.SIDE_SELL, '0.01', '1000', cancel_after='1m', time_in_force='FOK')
+
+
+def test_create_market_order_1():
+    with pytest.raises(MarketOrderException):
+        client.create_market_order('KCS-BTC', Client.SIDE_SELL, size=1, funds=1)
+
+
+def test_create_market_order_2():
+    with pytest.raises(MarketOrderException):
+        client.create_market_order('KCS-BTC', Client.SIDE_SELL)
