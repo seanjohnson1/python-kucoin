@@ -27,19 +27,10 @@ class KucoinAPIException(Exception):
         except ValueError:
             self.message = response.content
         else:
-            if 'error' in json_res:
-                self.message = json_res['error']
             if 'msg' in json_res:
                 self.message = json_res['msg']
-            if 'message' in json_res and json_res['message'] != 'No message available':
-                self.message += ' - {}'.format(json_res['message'])
             if 'code' in json_res:
                 self.code = json_res['code']
-            if 'data' in json_res:
-                try:
-                    self.message += " " + json.dumps(json_res['data'])
-                except ValueError:
-                    pass
 
         self.status_code = response.status_code
         self.response = response
@@ -70,4 +61,4 @@ class LimitOrderException(Exception):
         self.message = message
 
     def __str__(self):
-        return 'MarketOrderException: {}'.format(self.message)
+        return 'LimitOrderException: {}'.format(self.message)
