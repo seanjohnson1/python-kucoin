@@ -6,7 +6,6 @@ from kucoin.exceptions import KucoinAPIException, KucoinRequestException, Market
 import pytest
 import requests_mock
 import uuid
-import time
 
 api_key = "5c4eb3b1ef83c721c02cb97c"
 api_secret = "9589ff2f-c8ac-4ca6-8d72-83f38125c540"
@@ -32,7 +31,7 @@ def test_get_ticker():
 
 
 def test_get_order():
-    client.get_order('5c63c4aeef83c72f99c71e1a')
+    assert client.get_order('5c63c4aeef83c72f99c71e1a') is not None
 
 
 def test_create_limit_order():
@@ -40,6 +39,7 @@ def test_create_limit_order():
                               client_oid=str(uuid.uuid4()).replace('-', ''), remark='create limit order')
     client.create_limit_order('KCS-BTC', Client.SIDE_SELL, '0.0001', '1000', post_only=True)
     client.create_limit_order('KCS-BTC', Client.SIDE_SELL, '0.0001', '1000', cancel_after='60', time_in_force='GTT')
+    client.create_limit_order('KCS-BTC', Client.SIDE_SELL, '0.00000001', '1000', stop='loss', stop_price='0.00000002')
     client.cancel_all_orders()
 
 

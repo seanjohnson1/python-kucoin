@@ -1037,7 +1037,7 @@ class Client(object):
             data['postOnly'] = post_only
         if stop:
             data['stop'] = stop
-            data['stop_price'] = stop_price
+            data['stopPrice'] = stop_price
 
         return self._post('orders', True, data=data)
 
