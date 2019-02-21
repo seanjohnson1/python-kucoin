@@ -956,7 +956,8 @@ class Client(object):
         return self._post('orders', True, data=data)
 
     def create_limit_order(self, symbol, side, price, size, client_oid=None, remark=None,
-                           time_in_force=None, stop=None, stop_price=None, stp=None, cancel_after=None, post_only=None):
+                           time_in_force=None, stop=None, stop_price=None, stp=None, cancel_after=None, post_only=None,
+                           hidden=None, iceberg=None, visible_size=None):
         """Create an order
 
         https://docs.kucoin.com/#place-a-new-order
@@ -987,7 +988,12 @@ class Client(object):
         :param post_only: (optional) indicates that the order should only make liquidity. If any part of
             the order results in taking liquidity, the order will be rejected and no part of it will execute.
         :type post_only: bool
-
+        :param hidden: (optional) Orders not displayed in order book
+        :type hidden: bool
+        :param iceberg:  (optional) Only visible portion of the order is displayed in the order book
+        :type iceberg: bool
+        :param visible_size: (optional) The maximum visible size of an iceberg order
+        :type visible_size: bool
         .. code:: python
 
             order = client.create_limit_order('KCS-BTC', Client.SIDE_BUY, '0.01', '1000')
@@ -1012,6 +1018,12 @@ class Client(object):
 
         if cancel_after and time_in_force != self.TIMEINFORCE_GOOD_TILL_TIME:
             raise LimitOrderException('Cancel after only works with time_in_force = "GTT"')
+
+        if hidden and iceberg:
+            raise LimitOrderException('either hidden or iceberg')
+
+        if iceberg and not visible_size:
+            raise LimitOrderException('Iceberg order needs visible_size')
 
         data = {
             'symbol': symbol,
@@ -1038,6 +1050,11 @@ class Client(object):
         if stop:
             data['stop'] = stop
             data['stopPrice'] = stop_price
+        if hidden:
+            data['hidden'] = hidden
+        if iceberg:
+            data['iceberg'] = iceberg
+            data['visible_size'] = visible_size
 
         return self._post('orders', True, data=data)
 

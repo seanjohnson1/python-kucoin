@@ -7,11 +7,10 @@ import pytest
 import requests_mock
 import uuid
 
-api_key = "5c4eb3b1ef83c721c02cb97c"
-api_secret = "9589ff2f-c8ac-4ca6-8d72-83f38125c540"
-api_passphrase = "1234qwer"
+api_key = "5c6e2092ef83c76d7cb3e1d2"
+api_secret = "df848eb1-ba44-434c-97de-f36d06dc58a1"
+api_passphrase = "kucoin123"
 client = Client(api_key, api_secret, api_passphrase, sandbox=True)
-product_client = Client(api_key, api_secret, api_passphrase)
 
 
 def test_currency():
@@ -40,6 +39,8 @@ def test_create_limit_order():
     client.create_limit_order('KCS-BTC', Client.SIDE_SELL, '0.0001', '1000', post_only=True)
     client.create_limit_order('KCS-BTC', Client.SIDE_SELL, '0.0001', '1000', cancel_after='60', time_in_force='GTT')
     client.create_limit_order('KCS-BTC', Client.SIDE_SELL, '0.00000001', '1000', stop='loss', stop_price='0.00000002')
+    client.create_limit_order('KCS-BTC', 'buy', '0.00015', '100', hidden=True)
+    client.create_limit_order('KCS-BTC', 'buy', '0.00015', '100', iceberg=True, visible_size='1')
     client.cancel_all_orders()
 
 
@@ -212,6 +213,16 @@ def test_create_limit_order_exception_2():
 def test_create_limit_order_exception_3():
     with pytest.raises(LimitOrderException):
         client.create_limit_order('KCS-BTC', Client.SIDE_SELL, '0.01', '1000', cancel_after='1m', time_in_force='FOK')
+
+
+def test_create_limit_order_exception_4():
+    with pytest.raises(LimitOrderException):
+        client.create_limit_order('KCS-BTC', Client.SIDE_SELL, '0.01', '1000', hidden=True, iceberg=True)
+
+
+def test_create_limit_order_exception_5():
+    with pytest.raises(LimitOrderException):
+        client.create_limit_order('KCS-BTC', Client.SIDE_SELL, '0.01', '1000', iceberg=True)
 
 
 def test_create_market_order_1():
