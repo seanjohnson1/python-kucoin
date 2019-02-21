@@ -62,7 +62,7 @@ def test_get_withdrawal():
 
 
 def test_withdrawal_quota():
-    assert float(client.get_withdrawal_quotas('KCS')['usedBTCAmount']) == 0
+    assert float(client.get_withdrawal_quotas('ETH')['usedBTCAmount']) == 0
 
 
 def test_accounts():
