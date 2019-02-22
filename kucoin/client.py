@@ -1054,7 +1054,7 @@ class Client(object):
             data['hidden'] = hidden
         if iceberg:
             data['iceberg'] = iceberg
-            data['visible_size'] = visible_size
+            data['visibleSize'] = visible_size
 
         return self._post('orders', True, data=data)
 
