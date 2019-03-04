@@ -7,9 +7,9 @@ import pytest
 import requests_mock
 import uuid
 
-api_key = "5c6e2092ef83c76d7cb3e1d2"
-api_secret = "df848eb1-ba44-434c-97de-f36d06dc58a1"
-api_passphrase = "kucoin123"
+api_key = "5c753504ef83c77635824f12"
+api_secret = "17d66aff-2b08-4473-9610-aa25e5993841"
+api_passphrase = "abcd1234"
 client = Client(api_key, api_secret, api_passphrase, sandbox=True)
 
 
@@ -73,7 +73,7 @@ def test_accounts():
     assert client.get_account_holds(account_id, 1, 50)['totalNum'] >= 0
     # sandbox will deposit for you after registering
     assert client.get_account_history(account_id='5c51163aef83c72f924574e3')['totalNum'] >= 1
-    assert client.get_account_history(account_id='5c51163aef83c72f924574e3', start='1550043119000', end='1550043119000',
+    assert client.get_account_history(account_id='5c51163aef83c72f924574e3', start='1550043119000', end='1550043120000',
                                       page=1, page_size=10)['totalNum'] > 0
 
 
@@ -150,6 +150,14 @@ def test_get_deposit():
     response = client.get_deposits('BTC', 'SUCCESS', '946656000000', '946656000000', 1, 66)
     assert response['totalNum'] == 0
     assert response['pageSize'] == 66
+
+
+def get_get_bullet_public():
+    client.get_bullet_public()
+
+
+def get_get_bullet_private():
+    client.get_bullet_private()
 
 
 def test_invalid_json():

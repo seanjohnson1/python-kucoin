@@ -122,11 +122,11 @@ class Client(object):
 
         data_json = ""
         endpoint = path
-        if method == "get":
+        if method == "get" or method == 'delete':
             if data:
                 query_string = self._order_params_for_sig(data)
                 endpoint = "{}?{}".format(path, query_string)
-        elif data:
+        else:
             data_json = json.dumps(data, separators=(',', ':'), ensure_ascii=False)
         sig_str = ("{}{}{}{}".format(nonce, method.upper(), endpoint, data_json)).encode('utf-8')
         m = hmac.new(self.API_SECRET.encode('utf-8'), sig_str, hashlib.sha256)
@@ -159,7 +159,7 @@ class Client(object):
             kwargs['headers']['KC-API-TIMESTAMP'] = str(nonce)
             kwargs['headers']['KC-API-SIGN'] = self._generate_signature(nonce, method, full_path, kwargs['data'])
 
-        if kwargs['data'] and method == 'get':
+        if kwargs['data'] and (method == 'get' or method == 'delete'):
             kwargs['params'] = kwargs['data']
             del (kwargs['data'])
 
@@ -172,7 +172,7 @@ class Client(object):
 
     @staticmethod
     def _handle_response(response):
-        """Internal helper for handling API responses from the Quoine server.
+        """Internal helper for handling API responses from the Kucoin server.
         Raises the appropriate exceptions when necessary; otherwise, returns the
         response.
         """
@@ -1709,3 +1709,13 @@ class Client(object):
         """Get supported market list
         """
         return self._get('markets', False)
+
+    def get_bullet_public(self):
+        """Get public bullet for websocket connection
+        """
+        return self._post('bullet-public', False)
+
+    def get_bullet_private(self):
+        """Get private bullet for websocket connection
+        """
+        return self._post('bullet-private', True)
