@@ -707,7 +707,7 @@ class Client(object):
         if page_size:
             data['pageSize'] = page_size
         if page:
-            data['page'] = page
+            data['currentPage'] = page
 
         return self._get('deposits', True, data=data)
 
@@ -777,7 +777,7 @@ class Client(object):
         if page_size:
             data['pageSize'] = page_size
         if page:
-            data['page'] = page
+            data['currentPage'] = page
 
         return self._get('withdrawals', True, data=data)
 
@@ -1203,7 +1203,7 @@ class Client(object):
         if end:
             data['endAt'] = end
         if page:
-            data['page'] = page
+            data['currentPage'] = page
         if page_size:
             data['pageSize'] = page_size
 
@@ -1341,7 +1341,7 @@ class Client(object):
         if end:
             data['endAt'] = end
         if page:
-            data['page'] = page
+            data['currentPage'] = page
         if page_size:
             data['pageSize'] = page_size
 
@@ -1719,3 +1719,68 @@ class Client(object):
         """Get private bullet for websocket connection
         """
         return self._post('bullet-private', True)
+
+    def get_historical_orders(self, symbol=None, side=None, start=None, end=None, page=None, page_size=None):
+        """Get list of orders
+
+        https://docs.kucoin.com/#get-v1-historical-orders-list
+
+        :param symbol: (optional) Name of symbol e.g. KCS-BTC
+        :type symbol: string
+        :param side: (optional) buy or sell
+        :type side: string
+        :param start: (optional) Start time as unix timestamp
+        :type start: string
+        :param end: (optional) End time as unix timestamp
+        :type end: string
+        :param page: (optional) Page to fetch
+        :type page: int
+        :param page_size: (optional) Number of orders
+        :type page_size: int
+
+        .. code:: python
+
+            orders = client.get_historical_orders(symbol='KCS-BTC', status='active')
+
+        :returns: ApiResponse
+
+        .. code:: python
+
+            {
+                "currentPage": 1,
+                "pageSize": 50,
+                "totalNum": 1,
+                "totalPage": 1,
+                "items":[{
+                    "symbol": "SNOV-ETH",
+                    "dealPrice": "0.0000246",
+                    "dealValue": "0.018942",
+                    "amount": "770",
+                    "fee": "0.00001137",
+                    "side": "sell",
+                    "createdAt": 1540080199
+                    }
+                ]
+
+            }
+
+        :raises: KucoinResponseException, KucoinAPIException
+
+        """
+
+        data = {}
+
+        if symbol:
+            data['symbol'] = symbol
+        if side:
+            data['side'] = side
+        if start:
+            data['startAt'] = start
+        if end:
+            data['endAt'] = end
+        if page:
+            data['currentPage'] = page
+        if page_size:
+            data['pageSize'] = page_size
+
+        return self._get('hist-orders', True, data=data)
