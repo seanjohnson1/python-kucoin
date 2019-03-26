@@ -38,9 +38,9 @@ def test_create_limit_order():
                               client_oid=str(uuid.uuid4()).replace('-', ''), remark='create limit order')
     client.create_limit_order('KCS-BTC', Client.SIDE_SELL, '0.0001', '1000', post_only=True)
     client.create_limit_order('KCS-BTC', Client.SIDE_SELL, '0.0001', '1000', cancel_after='60', time_in_force='GTT')
-    client.create_limit_order('KCS-BTC', Client.SIDE_SELL, '0.00000001', '1000', stop='loss', stop_price='0.00000002')
+    client.create_limit_order('KCS-BTC', Client.SIDE_SELL, '0.0001', '1000', stop='loss', stop_price='0.0002')
     client.create_limit_order('KCS-BTC', 'buy', '0.00015', '100', hidden=True)
-    client.create_limit_order('KCS-BTC', 'buy', '0.00015', '100', iceberg=True, visible_size='1')
+    client.create_limit_order('KCS-BTC', 'buy', '0.00015', '100', iceberg=True, visible_size='100')
     client.cancel_all_orders()
 
 
