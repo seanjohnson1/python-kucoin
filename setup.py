@@ -3,14 +3,14 @@ from setuptools import setup
 
 setup(
     name='kucoin-python',
-    version='2.0.6',
+    version='2.0.7',
     packages=['kucoin'],
     description='Kucoin REST API v2 python implementation',
     url='https://github.com/Kucoin/python-kucoin',
     author='Kucoin',
     license='MIT',
     author_email='ly.luo@kucoin.com',
-    install_requires=['requests'],
+    install_requires=['requests','websocket_client'],
     keywords='kucoin exchange rest api bitcoin btc eth kcs',
     classifiers=[
           'Intended Audience :: Developers',

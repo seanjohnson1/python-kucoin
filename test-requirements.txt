@@ -5,5 +5,7 @@ pytest-cov
 pytest-pep8
 python-coveralls
 requests-mock
+requests
+websocket_client
 tox
 setuptools

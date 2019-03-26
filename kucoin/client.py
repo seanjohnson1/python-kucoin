@@ -1,14 +1,16 @@
 # coding=utf-8
 
 import base64
-from datetime import datetime
 import hashlib
 import hmac
 import json
+import threading
 import time
 import uuid
+from datetime import datetime
 
 import requests
+import websocket
 
 from .exceptions import (
     KucoinAPIException, KucoinRequestException, MarketOrderException, LimitOrderException
@@ -43,6 +45,8 @@ class Client(object):
     TIMEINFORCE_GOOD_TILL_TIME = 'GTT'
     TIMEINFORCE_IMMEDIATE_OR_CANCEL = 'IOC'
     TIMEINFORCE_FILL_OR_KILL = 'FOK'
+    threads = []
+    websocket_connections = []
 
     def __init__(self, api_key, api_secret, api_passphrase, sandbox=False, requests_params=None):
         """Kucoin API Client constructor
@@ -1647,8 +1651,8 @@ class Client(object):
 
         :param symbol: Name of symbol e.g. KCS-BTC
         :type  symbol: string
-        :param kline_type: type of symbol, type of candlestick patterns: 1min, 3min, 5min, 15min, 30min, 1hour, 2hour, 4hour,
-                     6hour, 8hour, 12hour, 1day, 1week
+        :param kline_type: type of symbol, type of candlestick patterns: 1min, 3min, 5min, 15min, 30min, 1hour, 2hour,
+                4hour, 6hour, 8hour, 12hour, 1day, 1week
         :type kline_type: string
         :param start_at: Start time, unix timestamp calculated in seconds
         :type start_at: long
@@ -1784,3 +1788,64 @@ class Client(object):
             data['pageSize'] = page_size
 
         return self._get('hist-orders', True, data=data)
+
+    def create_websocket(self, topics, on_message, on_error=None, on_close=None, private=False):
+        """create websocket connect
+        :param topics: which you want to subscribe
+        :type topics: List
+        :param on_message: when a message received , on_message will handle the message
+        :type on_message: callable object
+        :param on_error: when an error happened , on_error will handle it
+        :type on_error: callable object
+        :param on_close: when the connection closed , on_close will handle it
+        :type on_close: callable object
+        :param private: if false return public channel otherwise private channel
+        :type private: Boolean
+
+        examples for on_message, on_error, on_close
+        def on_message(ws, message):
+            print("receive a message")
+        def on_error(ws, error):
+            print("error happened")
+        def on_close(ws):
+            print("connection closed")
+        """
+        if private:
+            bullet = self.get_bullet_private()
+        else:
+            bullet = self.get_bullet_public()
+        conn = '{}?token={}'.format(bullet['instanceServers'][0]['endpoint'], bullet['token'])
+        ws = websocket.WebSocketApp(conn,
+                                    on_message=on_message,
+                                    on_error=on_error,
+                                    on_close=on_close)
+
+        def _on_open(ws_conn):
+            index = int(time.time())
+            for topic in topics:
+                ws_conn.send(
+                    '{{"id":{},"type": "subscribe","topic": "{}","response": true, "privateChannel": "{}"}}'.format(
+                        index, topic, private))
+                index += 1
+
+            def run():
+                while True:
+                    """heart beat message"""
+                    time.sleep(30)
+                    ws_conn.send('{"id":"1","type":"ping"}')
+
+            heart_beat = threading.Thread(target=run)
+            heart_beat.setDaemon(True)
+            heart_beat.start()
+
+        ws.on_open = _on_open
+        ws_thread = threading.Thread(target=ws.run_forever)
+        ws_thread.start()
+        self.websocket_connections.append(ws)
+        return ws
+
+    def shutdown(self):
+        """shutdown websocket connects"""
+        for t in self.websocket_connections:
+            t.close()
+            self.websocket_connections.remove(t)

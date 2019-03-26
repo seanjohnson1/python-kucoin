@@ -18,7 +18,6 @@ Welcome to kucoin-python v2.0.0
     :target: https://pypi.python.org/pypi/kucoin-python
 
 This is an official Python wrapper for the `Kucoin exchanges REST API v2 <https://docs.kucoin.com/>`_.
-The sdk is under development, the test did not complete.
 
 
 Features
@@ -63,3 +62,15 @@ or `Generate an API Key in Sandbox <https://sandbox.kucoin.com/account/api>`_ an
     # get accounts
     accounts = client.get_accounts()
 
+    # create public channel and subscribe a topic named "/market/level2:ETH-BTC"
+    public_ws = client.create_websocket(["/market/level2:ETH-BTC"], on_message)
+
+    # create public channel and subscribe a topic named "/account/balance"
+    ws = client.create_websocket(["/account/balance"], on_message, private=True)
+
+    # handle a message received event
+    def on_message(ws, message):
+        print("receive a %s" % message)
+
+    # shutdown client
+    client.shutdown()
